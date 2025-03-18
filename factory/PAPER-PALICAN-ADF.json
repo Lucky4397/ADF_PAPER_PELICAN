@@ -1,0 +1,9 @@
+{
+	"name": "PAPER-PALICAN-ADF",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "39c2e5de-436d-4835-9a67-c9d2e562552a",
+		"tenantId": "1f98034f-a1ba-48d1-9e63-34a986f3b5bb"
+	}
+}

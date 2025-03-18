@@ -1,0 +1,30 @@
+{
+	"name": "NASA",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "NASA_ASTERIOD_NEOBS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"STDT": {
+				"type": "string"
+			},
+			"ENDT": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "?Start_date=dataset().STDT&End_date=dataset().ENDT&api_key=DEMO_KEY",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

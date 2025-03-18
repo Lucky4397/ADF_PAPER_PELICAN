@@ -1,0 +1,78 @@
+{
+	"name": "NASA_ASTERIODS_NEOBS",
+	"properties": {
+		"activities": [
+			{
+				"name": "COPY_NASA_BLOB",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings",
+							"copyBehavior": "PreserveHierarchy"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "NASA",
+						"type": "DatasetReference",
+						"parameters": {
+							"STDT": {
+								"value": "@formatDateTime(addDays(utcNow(), -7), 'yyyy-MM-dd')",
+								"type": "Expression"
+							},
+							"ENDT": {
+								"value": "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-dd')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "NASA_BLOB",
+						"type": "DatasetReference",
+						"parameters": {
+							"STDT": {
+								"value": "@formatDateTime(addDays(utcNow(), -7), 'yyyy-MM-dd')",
+								"type": "Expression"
+							},
+							"ENDT": {
+								"value": "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-dd')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-03-17T02:03:29Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
