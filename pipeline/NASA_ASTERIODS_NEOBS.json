@@ -3,51 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "VAR_ST_DATE",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "VAR_STDATE",
-					"value": {
-						"value": "@formatDateTime(addDays(convertFromUtc(utcNow(),'Eastern Standard Time'), -7), 'yyyy-MM-dd')",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "VAR_EN_DATE",
-				"type": "SetVariable",
-				"dependsOn": [],
-				"policy": {
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "VAR_ENDATE",
-					"value": {
-						"value": "@formatDateTime(addDays(convertFromUtc(utcNow(),'Eastern Standard Time'), -1), 'yyyy-MM-dd')",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "NASA_BLOB_COPY",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "VAR_ST_DATE",
-						"dependencyConditions": [
-							"Completed"
-						]
-					},
-					{
-						"activity": "VAR_EN_DATE",
+						"activity": "SET_DATE",
 						"dependencyConditions": [
 							"Completed"
 						]
@@ -90,12 +50,8 @@
 						"referenceName": "NASA",
 						"type": "DatasetReference",
 						"parameters": {
-							"STDT": {
-								"value": "@variables('VAR_STDATE')",
-								"type": "Expression"
-							},
-							"ENDT": {
-								"value": "@variables('VAR_ENDATE')",
+							"DATE": {
+								"value": "@variables('VAR_DATE')",
 								"type": "Expression"
 							}
 						}
@@ -106,24 +62,34 @@
 						"referenceName": "NASA_BLOB",
 						"type": "DatasetReference",
 						"parameters": {
-							"STDT": {
-								"value": "@variables('VAR_STDATE')",
-								"type": "Expression"
-							},
-							"ENDT": {
-								"value": "@variables('VAR_ENDATE')",
+							"DATE": {
+								"value": "@variables('VAR_DATE')",
 								"type": "Expression"
 							}
 						}
 					}
 				]
+			},
+			{
+				"name": "SET_DATE",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "VAR_DATE",
+					"value": {
+						"value": "@formatDateTime(addDays(convertFromUtc(utcNow(),'Eastern Standard Time'), -1), 'yyyy-MM-dd')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"variables": {
-			"VAR_STDATE": {
-				"type": "String"
-			},
-			"VAR_ENDATE": {
+			"VAR_DATE": {
 				"type": "String"
 			}
 		},
