@@ -7,7 +7,8 @@
 		},
 		"parameters": {
 			"DATE": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2025-03-20"
 			}
 		},
 		"annotations": [],
@@ -16,7 +17,7 @@
 			"location": {
 				"type": "HttpServerLocation",
 				"relativeUrl": {
-					"value": "?Start_date=dataset().DATE&End_date=dataset().DATE&api_key=DEMO_KEY",
+					"value": "@?start_date=dataset().DATE&end_date=dataset().DATE&api_key=DEMO_KEY",
 					"type": "Expression"
 				}
 			}
