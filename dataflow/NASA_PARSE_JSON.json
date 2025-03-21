@@ -1,0 +1,63 @@
+{
+	"name": "NASA_PARSE_JSON",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "NASA_BLOB",
+						"type": "DatasetReference"
+					},
+					"name": "NASAJSONPARSE"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "FLAT1"
+				},
+				{
+					"name": "FLAT2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          links as (next as string, prev as string, self as string),",
+				"          element_count as integer,",
+				"          near_earth_objects as ({2025-03-20} as (links as (self as string), id as string, neo_reference_id as string, name as string, nasa_jpl_url as string, absolute_magnitude_h as double, estimated_diameter as (kilometers as (estimated_diameter_min as double, estimated_diameter_max as double), meters as (estimated_diameter_min as double, estimated_diameter_max as double), miles as (estimated_diameter_min as double, estimated_diameter_max as double), feet as (estimated_diameter_min as double, estimated_diameter_max as double)), is_potentially_hazardous_asteroid as boolean, close_approach_data as (close_approach_date as string, close_approach_date_full as string, epoch_date_close_approach as integer, relative_velocity as (kilometers_per_second as string, kilometers_per_hour as string, miles_per_hour as string), miss_distance as (astronomical as string, lunar as string, kilometers as string, miles as string), orbiting_body as string)[], is_sentry_object as boolean)[])",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'documentPerLine') ~> NASAJSONPARSE",
+				"NASAJSONPARSE foldDown(unrollMultiple(near_earth_objects.{2025-03-20},near_earth_objects.{2025-03-20}.close_approach_data),",
+				"     mapColumn(",
+				"          DATE = near_earth_objects.{2025-03-20}",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> FLAT1",
+				"FLAT1 foldDown(unroll(DATE.close_approach_data),",
+				"     mapColumn(",
+				"          DATE = DATE.links.self,",
+				"          id = DATE.id,",
+				"          neo_reference_id = DATE.neo_reference_id,",
+				"          name = DATE.name,",
+				"          nasa_jpl_url = DATE.nasa_jpl_url,",
+				"          absolute_magnitude_h = DATE.absolute_magnitude_h,",
+				"          est_diam_max_km = DATE.estimated_diameter.kilometers.estimated_diameter_min,",
+				"          est_diam_min_km = DATE.estimated_diameter.kilometers.estimated_diameter_max,",
+				"          est_diam_max_m = DATE.estimated_diameter.meters.estimated_diameter_min,",
+				"          est_diam_min_m = DATE.estimated_diameter.meters.estimated_diameter_max,",
+				"          est_diam_max_ml = DATE.estimated_diameter.miles.estimated_diameter_min,",
+				"          est_diam_min_ml = DATE.estimated_diameter.miles.estimated_diameter_max,",
+				"          est_diam_max_ft = DATE.estimated_diameter.feet.estimated_diameter_min,",
+				"          est_diam_min_ft = DATE.estimated_diameter.feet.estimated_diameter_max,",
+				"          is_potentially_hazardous_asteroid = DATE.is_potentially_hazardous_asteroid",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> FLAT2"
+			]
+		}
+	}
+}
