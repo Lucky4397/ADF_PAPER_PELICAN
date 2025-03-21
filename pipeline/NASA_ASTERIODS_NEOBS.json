@@ -3,9 +3,56 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "COPY_NASA_BLOB",
-				"type": "Copy",
+				"name": "VAR_ST_DATE",
+				"type": "SetVariable",
 				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "VAR_STDATE",
+					"value": {
+						"value": "@formatDateTime(addDays(convertFromUtc(utcNow(),'Eastern Standard Time'), -7), 'yyyy-MM-dd')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "VAR_EN_DATE",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "VAR_ENDATE",
+					"value": {
+						"value": "@formatDateTime(addDays(convertFromUtc(utcNow(),'Eastern Standard Time'), -1), 'yyyy-MM-dd')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "NASA_BLOB_COPY",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "VAR_ST_DATE",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "VAR_EN_DATE",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -19,7 +66,8 @@
 						"type": "JsonSource",
 						"storeSettings": {
 							"type": "HttpReadSettings",
-							"requestMethod": "GET"
+							"requestMethod": "GET",
+							"requestTimeout": ""
 						},
 						"formatSettings": {
 							"type": "JsonReadSettings"
@@ -29,7 +77,7 @@
 						"type": "JsonSink",
 						"storeSettings": {
 							"type": "AzureBlobStorageWriteSettings",
-							"copyBehavior": "PreserveHierarchy"
+							"copyBehavior": "FlattenHierarchy"
 						},
 						"formatSettings": {
 							"type": "JsonWriteSettings"
@@ -43,11 +91,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"STDT": {
-								"value": "@formatDateTime(addDays(utcNow(), -7), 'yyyy-MM-dd')",
+								"value": "@variables('VAR_STDATE')",
 								"type": "Expression"
 							},
 							"ENDT": {
-								"value": "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-dd')",
+								"value": "@variables('VAR_ENDATE')",
 								"type": "Expression"
 							}
 						}
@@ -59,11 +107,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"STDT": {
-								"value": "@formatDateTime(addDays(utcNow(), -7), 'yyyy-MM-dd')",
+								"value": "@variables('VAR_STDATE')",
 								"type": "Expression"
 							},
 							"ENDT": {
-								"value": "@formatDateTime(addDays(utcNow(), -1), 'yyyy-MM-dd')",
+								"value": "@variables('VAR_ENDATE')",
 								"type": "Expression"
 							}
 						}
@@ -71,6 +119,14 @@
 				]
 			}
 		],
+		"variables": {
+			"VAR_STDATE": {
+				"type": "String"
+			},
+			"VAR_ENDATE": {
+				"type": "String"
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2025-03-17T02:03:29Z"
 	},
