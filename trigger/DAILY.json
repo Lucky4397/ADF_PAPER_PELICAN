@@ -1,5 +1,5 @@
 {
-	"name": "WEEKLY_SUN",
+	"name": "DAILY",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -14,19 +14,16 @@
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
-				"frequency": "Week",
+				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2025-03-23T00:00:00",
+				"startTime": "2025-03-21T00:00:00",
 				"timeZone": "Eastern Standard Time",
 				"schedule": {
 					"minutes": [
 						0
 					],
 					"hours": [
-						0
-					],
-					"weekDays": [
-						"Sunday"
+						10
 					]
 				}
 			}
