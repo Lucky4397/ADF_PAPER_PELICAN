@@ -1,5 +1,5 @@
 {
-	"name": "NASA_BLOB",
+	"name": "NASA_BLOB_JSON",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "PAPER_PELICAN_BLOB",
@@ -20,6 +20,7 @@
 					"value": "@concat(dataset().DATE,'.JSON')",
 					"type": "Expression"
 				},
+				"folderPath": "json",
 				"container": "nasa"
 			}
 		},

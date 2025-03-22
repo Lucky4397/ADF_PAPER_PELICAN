@@ -59,7 +59,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "NASA_BLOB",
+						"referenceName": "NASA_BLOB_JSON",
 						"type": "DatasetReference",
 						"parameters": {
 							"DATE": {
@@ -73,6 +73,8 @@
 			{
 				"name": "SET_DATE",
 				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"secureOutput": false,
@@ -90,7 +92,8 @@
 		],
 		"variables": {
 			"VAR_DATE": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "2025-03-20"
 			}
 		},
 		"annotations": [],

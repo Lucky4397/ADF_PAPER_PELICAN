@@ -6,13 +6,17 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "NASA_BLOB",
+						"referenceName": "NASA_BLOB_JSON",
 						"type": "DatasetReference"
 					},
 					"name": "NASAJSONPARSE"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "FLAT1"
@@ -53,10 +57,15 @@
 				"          est_diam_min_ml = DATE.estimated_diameter.miles.estimated_diameter_max,",
 				"          est_diam_max_ft = DATE.estimated_diameter.feet.estimated_diameter_min,",
 				"          est_diam_min_ft = DATE.estimated_diameter.feet.estimated_diameter_max,",
-				"          is_potentially_hazardous_asteroid = DATE.is_potentially_hazardous_asteroid",
+				"          is_potentially_hazardous_asteroid = DATE.is_potentially_hazardous_asteroid,",
+				"          is_sentry_object = DATE.is_sentry_object",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> FLAT2"
+				"     skipDuplicateMapOutputs: false) ~> FLAT2",
+				"FLAT2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
