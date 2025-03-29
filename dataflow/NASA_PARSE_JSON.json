@@ -19,45 +19,38 @@
 				},
 				{
 					"name": "FLAT2"
+				},
+				{
+					"name": "HEADARRAY"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
+				"          element_count as short,",
 				"          links as (next as string, prev as string, self as string),",
-				"          element_count as integer,",
-				"          near_earth_objects as ({2025-03-20} as (links as (self as string), id as string, neo_reference_id as string, name as string, nasa_jpl_url as string, absolute_magnitude_h as double, estimated_diameter as (kilometers as (estimated_diameter_min as double, estimated_diameter_max as double), meters as (estimated_diameter_min as double, estimated_diameter_max as double), miles as (estimated_diameter_min as double, estimated_diameter_max as double), feet as (estimated_diameter_min as double, estimated_diameter_max as double)), is_potentially_hazardous_asteroid as boolean, close_approach_data as (close_approach_date as string, close_approach_date_full as string, epoch_date_close_approach as integer, relative_velocity as (kilometers_per_second as string, kilometers_per_hour as string, miles_per_hour as string), miss_distance as (astronomical as string, lunar as string, kilometers as string, miles as string), orbiting_body as string)[], is_sentry_object as boolean)[])",
+				"          near_earth_objects as ({2025-03-20} as (absolute_magnitude_h as double, close_approach_data as (close_approach_date as date, close_approach_date_full as string, epoch_date_close_approach as long, miss_distance as (astronomical as double, kilometers as double, lunar as double, miles as double), orbiting_body as string, relative_velocity as (kilometers_per_hour as double, kilometers_per_second as double, miles_per_hour as double))[], estimated_diameter as (feet as (estimated_diameter_max as double, estimated_diameter_min as double), kilometers as (estimated_diameter_max as double, estimated_diameter_min as double), meters as (estimated_diameter_max as double, estimated_diameter_min as double), miles as (estimated_diameter_max as double, estimated_diameter_min as double)), id as integer, is_potentially_hazardous_asteroid as boolean, is_sentry_object as boolean, links as (self as string), name as string, nasa_jpl_url as string, neo_reference_id as integer)[])",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
-				"     documentForm: 'documentPerLine') ~> NASAJSONPARSE",
-				"NASAJSONPARSE foldDown(unrollMultiple(near_earth_objects.{2025-03-20},near_earth_objects.{2025-03-20}.close_approach_data),",
+				"     documentForm: 'arrayOfDocuments') ~> NASAJSONPARSE",
+				"HEADARRAY foldDown(unroll(HEADER),",
 				"     mapColumn(",
-				"          DATE = near_earth_objects.{2025-03-20}",
+				"          element_count = HEADER.element_count,",
+				"          next = HEADER.links.next,",
+				"          prev = HEADER.links.prev,",
+				"          self = HEADER.links.self,",
+				"          near_earth_objects = HEADER.near_earth_objects",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> FLAT1",
-				"FLAT1 foldDown(unroll(DATE.close_approach_data),",
+				"FLAT1 foldDown(unroll(near_earth_objects),",
 				"     mapColumn(",
-				"          DATE = DATE.links.self,",
-				"          id = DATE.id,",
-				"          neo_reference_id = DATE.neo_reference_id,",
-				"          name = DATE.name,",
-				"          nasa_jpl_url = DATE.nasa_jpl_url,",
-				"          absolute_magnitude_h = DATE.absolute_magnitude_h,",
-				"          est_diam_max_km = DATE.estimated_diameter.kilometers.estimated_diameter_min,",
-				"          est_diam_min_km = DATE.estimated_diameter.kilometers.estimated_diameter_max,",
-				"          est_diam_max_m = DATE.estimated_diameter.meters.estimated_diameter_min,",
-				"          est_diam_min_m = DATE.estimated_diameter.meters.estimated_diameter_max,",
-				"          est_diam_max_ml = DATE.estimated_diameter.miles.estimated_diameter_min,",
-				"          est_diam_min_ml = DATE.estimated_diameter.miles.estimated_diameter_max,",
-				"          est_diam_max_ft = DATE.estimated_diameter.feet.estimated_diameter_min,",
-				"          est_diam_min_ft = DATE.estimated_diameter.feet.estimated_diameter_max,",
-				"          is_potentially_hazardous_asteroid = DATE.is_potentially_hazardous_asteroid,",
-				"          is_sentry_object = DATE.is_sentry_object",
+				"          epoch_date_close_approach = near_earth_objects.close_approach_data.epoch_date_close_approach",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> FLAT2"
+				"     skipDuplicateMapOutputs: false) ~> FLAT2",
+				"NASAJSONPARSE aggregate(HEADER = collect(@(element_count=element_count,links=links,near_earth_objects=near_earth_objects))) ~> HEADARRAY"
 			]
 		}
 	}
