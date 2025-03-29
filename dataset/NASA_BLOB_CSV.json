@@ -1,0 +1,32 @@
+{
+	"name": "NASA_BLOB_CSV",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "PAPER_PELICAN_BLOB",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"DATE": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(dataset().DATE,'.CSV')",
+					"type": "Expression"
+				},
+				"folderPath": "csv",
+				"container": "nasa"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
