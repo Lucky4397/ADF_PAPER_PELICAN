@@ -12,11 +12,7 @@
 					"name": "NASAJSONPARSE"
 				}
 			],
-			"sinks": [
-				{
-					"name": "sink1"
-				}
-			],
+			"sinks": [],
 			"transformations": [
 				{
 					"name": "FLAT1"
@@ -61,11 +57,7 @@
 				"          is_sentry_object = DATE.is_sentry_object",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> FLAT2",
-				"FLAT2 sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: false) ~> FLAT2"
 			]
 		}
 	}
