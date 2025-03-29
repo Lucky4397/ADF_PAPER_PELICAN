@@ -8,7 +8,7 @@
 		"parameters": {
 			"DATE": {
 				"type": "string",
-				"defaultValue": "2025-03-20"
+				"defaultValue": "2025-03-28"
 			}
 		},
 		"annotations": [],
