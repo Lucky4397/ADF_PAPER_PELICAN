@@ -96,12 +96,67 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "NASA_PARSE_JSON",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "NASA_BLOB_COPY",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "NASA_PARSE_JSON",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"SOURCENASAJSON": {
+								"DATE": {
+									"value": "@variables('VAR_DATE')",
+									"type": "Expression"
+								}
+							},
+							"SINKCSV": {
+								"DATE": {
+									"value": "@variables('VAR_DATE')",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceParameters": {
+							"SINKCSV": {
+								"schemaLinkedService": {
+									"DATE": {
+										"value": "@variables('VAR_DATE')",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"variables": {
 			"VAR_DATE": {
 				"type": "String",
-				"defaultValue": "2025-03-18"
+				"defaultValue": "2025-03-27"
 			}
 		},
 		"annotations": [],

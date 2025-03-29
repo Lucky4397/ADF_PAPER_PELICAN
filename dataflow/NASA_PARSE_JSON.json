@@ -18,7 +18,11 @@
 						"referenceName": "NASA_BLOB_CSV",
 						"type": "DatasetReference"
 					},
-					"name": "SINKCSV"
+					"name": "SINKCSV",
+					"rejectedDataLinkedService": {
+						"referenceName": "PAPER_PELICAN_BLOB",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [
@@ -38,7 +42,7 @@
 				"     documentForm: 'documentPerLine') ~> SOURCENASAJSON",
 				"SOURCENASAJSON select(mapColumn(",
 				"          element_count,",
-				"          links = links.next,",
+				"          next = links.next,",
 				"          prev = links.prev,",
 				"          self = links.self",
 				"     ),",
